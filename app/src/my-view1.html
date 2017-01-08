@@ -1,0 +1,112 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view1">
+  <template>
+    <style is="custom-style">
+      paper-radio-button.red {
+        --paper-radio-button-checked-color: var(--paper-red-500);
+        --paper-radio-button-checked-ink-color: var(--paper-red-500);
+        --paper-radio-button-unchecked-color: var(--paper-red-900);
+        --paper-radio-button-unchecked-ink-color: var(--paper-red-900);
+        --paper-radio-button-label-color: var(--paper-red-500);
+      }
+      paper-radio-button.green {
+        --paper-radio-button-checked-color: var(--paper-green-500);
+        --paper-radio-button-checked-ink-color: var(--paper-green-500);
+        --paper-radio-button-unchecked-color: var(--paper-green-900);
+        --paper-radio-button-unchecked-ink-color: var(--paper-green-900);
+        --paper-radio-button-label-color: var(--paper-green-500);
+      }
+    </style>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <iron-ajax
+        auto
+        url="/api/pins"
+        handle-as="json"
+        last-response="{{pins}}"
+        debounce-duration="100"></iron-ajax>
+    <iron-ajax
+        id="status"
+        auto
+        url="/api/status"
+        handle-as="json"
+        last-response="{{status}}"
+        debounce-duration="100"></iron-ajax>
+    <iron-ajax
+        id="toggle"
+        url="/api/gpio/{{pin}}/toggle"
+        handle-as="json"
+        method="POST"
+        debounce-duration="100"></iron-ajax>
+    <div class="card">
+      <!-- <p>pins: {{stringify(pins)}}</p> -->
+      <p>status: {{stringify(orderedstatus)}}</p>
+      <ul>
+        <template is="dom-repeat" items="{{status}}">
+          <li><paper-radio-button checked$="[[item.status]]" class="green" on-click="toggle">[[item.pin]]</paper-radio-button></li>
+        </template>
+      </ul>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-view1',
+      properties: {
+        pin: {
+          type: Number,
+          value: 0,
+          notify: true
+        },
+        pins: {
+          type: Object,
+          value: function(){
+            return {};
+          },
+          notify: true
+        },
+        status: {
+          type: Object,
+          value: function(){
+            return {};
+          },
+          notify: true
+        },
+        orderedstatus: {
+          computed: 'ordered(status)'
+        },
+      },
+      toggle: function(e) {
+        var model = e.model;
+        this.set('pin', model.item.pin);
+        this.$.toggle.generateRequest();
+        this.$.status.generateRequest();
+      },
+      orderedstatus: function(list) {
+        return Object.keys(list).sort(function(a,b){return list[a]-list[b]})
+      },
+      stringify: function(text) {
+        return JSON.stringify(text)
+      },
+    });
+  </script>
+</dom-module>

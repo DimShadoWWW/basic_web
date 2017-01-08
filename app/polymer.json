@@ -1,0 +1,21 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/my-app.html",
+  "fragments": [
+    "src/my-view1.html",
+    "src/my-view404.html"
+  ],
+  "sourceGlobs": [
+    "src/**/*",
+    "images/**/*",
+    "fonts/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/font-roboto/fonts/roboto/Roboto-Medium.ttf",
+    "bower_components/font-roboto/fonts/roboto/Roboto-Bold.ttf",
+    "bower_components/font-roboto/fonts/roboto/Roboto-Regular.ttf",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
