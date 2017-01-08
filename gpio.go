@@ -57,7 +57,7 @@ func (s orderedMap) Less(i, j int) bool {
 
 // router.Path("/api/gpio/{id}").Methods("GET").HandlerFunc(getStatus).Methods("GET")
 func getListPins() {
-	fmt.Println("getListPins")
+	fmt.Println("get usable pin list")
 	var pins []int
 	for k := range usablePins {
 		pins = append(pins, int(k))
@@ -87,8 +87,6 @@ func getPins(w http.ResponseWriter, q *http.Request) {
 
 // router.Path("/api/gpio/{id}").Methods("GET").HandlerFunc(getStatus).Methods("GET")
 func getStatus(w http.ResponseWriter, q *http.Request) {
-	fmt.Println("getStatus")
-
 	params := mux.Vars(q)
 	// w http.ResponseWriter, body []byte, params map[string]string) {
 	idStr := params["id"]
@@ -102,6 +100,7 @@ func getStatus(w http.ResponseWriter, q *http.Request) {
 		sendResponse(w, response{Error: err.Error()})
 		return
 	}
+	fmt.Printf("get status of %s", idStr)
 
 	if _, ok := usablePins[uint8(id)]; ok {
 		pin := rpio.Pin(id)
@@ -138,8 +137,6 @@ func getGPIOStatus(w http.ResponseWriter, q *http.Request) {
 
 // router.Path("/api/gpio/{id}/high").Methods("POST").HandlerFunc(high)
 func high(w http.ResponseWriter, q *http.Request) {
-	fmt.Println("high")
-
 	params := mux.Vars(q)
 	// w http.ResponseWriter, body []byte, params map[string]string) {
 	idStr := params["id"]
@@ -147,6 +144,7 @@ func high(w http.ResponseWriter, q *http.Request) {
 		sendResponse(w, response{Error: "ID not specified"})
 		return
 	}
+	fmt.Printf("set HIGH to %s", idStr)
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -164,8 +162,6 @@ func high(w http.ResponseWriter, q *http.Request) {
 
 // router.Path("/api/gpio/{id}/low").Methods("POST").HandlerFunc(low)
 func low(w http.ResponseWriter, q *http.Request) {
-	fmt.Println("low")
-
 	params := mux.Vars(q)
 	// w http.ResponseWriter, body []byte, params map[string]string) {
 	idStr := params["id"]
@@ -173,6 +169,7 @@ func low(w http.ResponseWriter, q *http.Request) {
 		sendResponse(w, response{Error: "ID not specified"})
 		return
 	}
+	fmt.Printf("set LOW to %s", idStr)
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -190,8 +187,6 @@ func low(w http.ResponseWriter, q *http.Request) {
 
 // router.Path("/api/gpio/{id}/toggle").Methods("POST").HandlerFunc(toggle)
 func toggle(w http.ResponseWriter, q *http.Request) {
-	fmt.Println("toggle")
-
 	params := mux.Vars(q)
 	// w http.ResponseWriter, body []byte, params map[string]string) {
 	idStr := params["id"]
@@ -199,6 +194,7 @@ func toggle(w http.ResponseWriter, q *http.Request) {
 		sendResponse(w, response{Error: "ID not specified"})
 		return
 	}
+	fmt.Printf("set TOGGLE to %s", idStr)
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
